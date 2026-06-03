@@ -4,3 +4,4 @@
 | ---- | ----- | ------------- |
 | 3.6  | 4     | Planning project ideas and features |
 | 3.6  | 2     | Writing initial documentation |
+| Total | 6 | Total |

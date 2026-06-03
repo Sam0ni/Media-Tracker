@@ -10,13 +10,13 @@ Media Tracker is intended to be a web application for keeping tabs on, and/or ra
 
 ### Planned Features
 
-- [] A user can create an account and sign in.
-- [] A user can search for media.
-- [] Media can be marked as owned (either physically or digitally).
-- [] Media can be marked as watched/read/listened/played.
-- [] Media can be rated (marks media as "consumed").
-- [] Media can be reviewed (must be rated also).
-- [] User can filter searched media by different metrics (for example genre/avg.rating/owned/"consumed"). This advanced search is available only per media type.
-- [] A user can add friends and see their activity.
+- [ ] A user can create an account and sign in.
+- [ ] A user can search for media.
+- [ ] Media can be marked as owned (either physically or digitally).
+- [ ] Media can be marked as watched/read/listened/played.
+- [ ] Media can be rated (marks media as "consumed").
+- [ ] Media can be reviewed (must be rated also).
+- [ ] User can filter searched media by different metrics (for example genre/avg.rating/owned/"consumed"). This advanced search is available only per media type.
+- [ ] A user can add friends and see their activity.
 
 This list is subject to change as the app development proceeds.
