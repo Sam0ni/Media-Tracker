@@ -6,6 +6,8 @@ services:
       - .:/usr/src/app
     ports:
       - 3001:3001
+    environment:
+      - MONGODB_URL: mongodeb://root:example@mongo:27017/
 
   database:
     image: mongo
