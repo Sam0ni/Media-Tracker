@@ -1,0 +1,15 @@
+services:
+  backend:
+    image: media-backend
+    build: .
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 3001:3001
+
+  database:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
