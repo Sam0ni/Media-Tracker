@@ -7,8 +7,7 @@ services:
     ports:
       - 3001:3001
     environment:
-      - MONGODB_URL: mongodeb://root:example@mongo:27017/
-
+      - MONGODB_URL=mongodb://root:example@mongo:27017
   database:
     image: mongo
     restart: always
