@@ -7,9 +7,11 @@ services:
     ports:
       - 3001:3001
     environment:
-      - MONGODB_URL=mongodb://root:example@mongo:27017
+      - MONGODB_URL=mongodb://root:example@database:27017/
+    depends_on:
+      - database
   database:
-    image: mongo
+    image: mongo:7
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
