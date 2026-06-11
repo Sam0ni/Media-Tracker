@@ -1,5 +1,6 @@
 import { useState } from "react"
 import axios from "axios"
+import { login } from "./services/user"
 
 const LoginForm = () => {
   const [username, setUsername] = useState("")
@@ -12,21 +13,19 @@ const LoginForm = () => {
       password
     }
 
-    axios
-      .post("http://localhost:3001/login", credentials)
-      .then(res => {
-        console.log(res)
-      })
+    console.log(login(credentials))
   }
 
   return (
     <form onSubmit={sendLogin}>
       <input
+        type="text"
         value={username}
         onChange={(event) => setUsername(event.target.value)}
       />
 
       <input
+        type="password"
         value={password}
         onChange={(event) => setPassword(event.target.value)}
       />
