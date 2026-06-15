@@ -24,4 +24,4 @@ const decodeToken = req => {
     return decodedToken
 }
 
-module.exports = create_token
+module.exports = { create_token, decodeToken }

@@ -1,4 +1,7 @@
 const moviesRouter = require("express").Router()
+const MovieLog = require("../models/movie_log")
+const User = require("../models/user")
+const decodeToken = require("../services/token_service")
 
 moviesRouter.get("/:id", async (req, res) => {
     const id = req.params.id
@@ -26,7 +29,34 @@ moviesRouter.get("/advancedsearch", async (req, res) => {
     )*/
 })
 
-moviesRouter.post("/")
+moviesRouter.post("/log", async (req, res) => {
+    const body = req.body
+    const decodedToken = decodeToken(req)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+
+    if (!user) {
+        return response.status(400).json({ error: 'UserId missing or not valid' })
+    }
+
+    const loggedMovie = new MovieLog({
+        userId: user._id,
+        movieId: body.movieId,
+
+        watched: body.watched,
+        watchedAt: body.watchedAt,
+        rating: body.rating,
+        review: body.review,
+        owned: body.owned,
+    })
+
+    const savedLog = loggedMovie.save()
+
+    response.status(201).json(savedLog)
+})
 
 
 module.exports = moviesRouter
