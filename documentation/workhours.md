@@ -8,4 +8,5 @@
 | 9.6  | 2.5   | dockerized the backend and implemented user administration to mongodb |
 | 11.6 | 2.5   | making the initial react frontend |
 | 11.6 | 2     | Searching for suitable movie api, and getting familiar with the needed queries |
-| Total | 14.5 | Total | 
+| 15.6 | 3     | Creating initial query endpoints in backend, and schemas for logging and listing movies |
+| Total | 17.5 | Total | 
