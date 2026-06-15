@@ -1,22 +1,14 @@
 const mongoose = require("mongoose")
 
-mongoose.set("strictQuery", false)
-
-const url = process.env.MONGODB_URL
-
-console.log("connecting to db at url:", url)
-
-mongoose.connect(url, { family: 4 })
-    .then(res => {
-        console.log("Connected succesfully to DB!")
-    })
-    .catch(err => {
-        console.log("error connecting to DB:", err.message)
-    })
-
 const userSchema = new mongoose.Schema({
-    username: String,
-    passwordHash: String,
+    username: {
+        type: String,
+        required: true,
+    },
+    passwordHash: {
+        type: String,
+        required: true,
+    }
 })
 
 userSchema.set("toJSON", {

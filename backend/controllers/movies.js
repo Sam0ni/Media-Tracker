@@ -18,4 +18,15 @@ moviesRouter.get("/search/:query", async (req, res) => {
     console.log(data.results)
 })
 
+moviesRouter.get("/advancedsearch", async (req, res) => {
+    const queries = req.query
+    console.log(queries)
+    /*const movies = await fetch(
+        `https://api.themoviedb.org/3/discover/movie?QUERIES_HERE&api_key=${process.env.TMDB_API_KEY}`
+    )*/
+})
+
+moviesRouter.post("/")
+
+
 module.exports = moviesRouter

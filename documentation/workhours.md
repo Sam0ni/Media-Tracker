@@ -6,4 +6,6 @@
 | 3.6  | 2     | Writing initial documentation |
 | 8.6  | 1.5   | Started creating walking skeleton of backend |
 | 9.6  | 2.5   | dockerized the backend and implemented user administration to mongodb |
-| Total | 10 | Total | 
+| 11.6 | 2.5   | making the initial react frontend |
+| 11.6 | 2     | Searching for suitable movie api, and getting familiar with the needed queries |
+| Total | 14.5 | Total | 
