@@ -3,6 +3,7 @@ const express = require("express")
 const app = express()
 const usersRouter = require("./controllers/users")
 const loginRouter = require("./controllers/login")
+const movieRouter = require("./controllers/movies")
 const connect_to_db = require("./config/database_connection")
 
 app.use(express.json())
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
+app.use("/api/movies", movieRouter)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
