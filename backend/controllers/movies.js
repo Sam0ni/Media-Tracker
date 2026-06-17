@@ -33,13 +33,13 @@ moviesRouter.post("/log", async (req, res) => {
     const body = req.body
     const decodedToken = decodeToken(req)
     if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' })
+        return res.status(401).json({ error: 'token invalid' })
     }
 
     const user = await User.findById(decodedToken.id)
 
     if (!user) {
-        return response.status(400).json({ error: 'UserId missing or not valid' })
+        return res.status(400).json({ error: 'UserId missing or not valid' })
     }
 
     const loggedMovie = new MovieLog({
@@ -55,7 +55,40 @@ moviesRouter.post("/log", async (req, res) => {
 
     const savedLog = loggedMovie.save()
 
-    response.status(201).json(savedLog)
+    res.status(201).json(savedLog)
+})
+
+moviesRouter.put("/log/:id", async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+
+    const decodedToken = decodeToken(req)
+    if (!decodedToken.id) {
+        return res.status(401).json({ error: 'token invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+
+    if (!user) {
+        return res.status(400).json({ error: 'UserId missing or not valid' })
+    }
+
+    const loggedMovie = await MovieLog.findById(id)
+
+    if (!loggedMovie) {
+        return res.status(400).json({ error: "Invalid Logged Movie ID" })
+    }
+
+    loggedMovie.watched = body.watched ? body.watched : loggedMovie.watched
+    loggedMovie.watchedAt = body.watchedAt ? body.watchedAt : loggedMovie.watchedAt
+    loggedMovie.rating = body.rating ? body.rating : loggedMovie.rating
+    loggedMovie.review = body.review ? body.review : loggedMovie.review
+    loggedMovie.owned = body.owned ? body.owned : loggedMovie.owned
+
+    const savedLog = loggedMovie.save()
+
+    res.status(201).json(savedLog)
+
 })
 
 
