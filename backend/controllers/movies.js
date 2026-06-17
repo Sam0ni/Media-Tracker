@@ -45,7 +45,7 @@ moviesRouter.post("/log", userExtractor, async (req, res) => {
         owned: body.owned,
     })
 
-    const savedLog = loggedMovie.save()
+    const savedLog = await loggedMovie.save()
 
     res.status(201).json(savedLog)
 })
@@ -55,7 +55,7 @@ moviesRouter.put("/log/:id", userExtractor, async (req, res) => {
     const body = req.body
     const user = req.user
 
-    const loggedMovie = await MovieLog.findOne({id: id, userId: user.id})
+    const loggedMovie = await MovieLog.findOne({_id: id, userId: user.id})
 
     if (!loggedMovie) {
         return res.status(400).json({ error: "Invalid Logged Movie or User ID" })
@@ -67,7 +67,7 @@ moviesRouter.put("/log/:id", userExtractor, async (req, res) => {
     loggedMovie.review = body.review ? body.review : loggedMovie.review
     loggedMovie.owned = body.owned ? body.owned : loggedMovie.owned
 
-    const savedLog = loggedMovie.save()
+    const savedLog = await loggedMovie.save()
 
     res.status(201).json(savedLog)
 

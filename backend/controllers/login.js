@@ -1,4 +1,4 @@
-const create_token = require("../services/token_service")
+const { create_token } = require("../services/token_service")
 const bcrypt = require("bcrypt")
 const loginRouter = require("express").Router()
 const User = require("../models/user")

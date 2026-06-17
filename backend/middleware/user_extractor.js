@@ -1,5 +1,5 @@
 const User = require("../models/user")
-const decodeToken = require("../services/token_service")
+const { decodeToken } = require("../services/token_service")
 
 const userExtractor = async (req, res, next) => {
     try {
