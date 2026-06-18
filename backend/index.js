@@ -1,15 +1,15 @@
-require("dotenv").config()
+const config = require("./utils/config")
 const express = require("express")
 const app = express()
 const usersRouter = require("./controllers/users")
 const loginRouter = require("./controllers/login")
 const movieRouter = require("./controllers/movies")
-const connect_to_db = require("./config/database_connection")
+const connect_to_db = require("./utils/database_connection")
+const errorHandler = require("./middleware/error_handler")
 
 app.use(express.json())
 
-const db_url = process.env.MONGODB_URL
-connect_to_db(db_url)
+connect_to_db(config.MONGODB_URL)
 
 
 app.get("/", (req, res) => {
@@ -20,7 +20,8 @@ app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
 app.use("/api/movies", movieRouter)
 
-const PORT = process.env.PORT
+app.use(errorHandler)
+
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${config.PORT}`)
 })

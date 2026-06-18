@@ -1,6 +1,6 @@
 PUT http://localhost:3001/api/movies/log/6a328b70e6f4cc73bc991bd6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RuYW1lIiwiaWQiOiI2YTMyOGE0YWM2ZjA4ZGYzMjVhODhlNTUiLCJpYXQiOjE3ODE2OTcxNjh9.VBy8VGKHltVrj7CHlzFiRttRAmN3vgt0A7eJM5Wdvj0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RuYW1lIiwiaWQiOiI2YTMyOGE0YWM2ZjA4ZGYzM
 
 
 {
