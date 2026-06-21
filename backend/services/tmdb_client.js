@@ -1,10 +1,9 @@
-class MovieNotFoundError extends Error {}
-
+const { MovieNotFoundError, MovieServiceAuthError, MovieRateLimitError, MovieServiceError } = require("../errors/movie_errors")
 
 const throwTmdbError = (res) => {
     switch (res.status) {
         case 404:
-            throw new MovieNotFoundError("Movie not found")
+            throw new MovieNotFoundError()
 
         case 401:
             throw new MovieServiceAuthError("Invalid API key")

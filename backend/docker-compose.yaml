@@ -8,6 +8,7 @@ services:
       - 3001:3001
     environment:
       - MONGODB_URL=mongodb://root:example@database:27017/
+      - TEST_MONGODB_URL=mongodb://root:example@database:27017/testdb?authSource=admin
     depends_on:
       - database
   database:
