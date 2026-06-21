@@ -3,14 +3,12 @@ const MovieLog = require("../models/movie_log")
 const User = require("../models/user")
 const decodeToken = require("../services/token_service")
 const userExtractor = require("../middleware/user_extractor")
+const TmdbClient = require("../services/tmdb_client")
 
 moviesRouter.get("/:id", async (req, res) => {
     const id = req.params.id
-    const movie = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_API_KEY}`
-    )
-    const data = await movie.json()
-    console.log(data)
+    const movie = await TmdbClient.getMovie(id)
+    return res.json(movie)
 })
 
 moviesRouter.get("/search/:query", async (req, res) => {
