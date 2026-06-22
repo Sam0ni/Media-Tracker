@@ -29,7 +29,7 @@ class TmdbClient {
             throwTmdbError(res)
         }
 
-        return res
+        return await res.json()
     }
 }
 

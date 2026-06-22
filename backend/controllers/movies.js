@@ -17,7 +17,7 @@ moviesRouter.get("/search/:query", async (req, res) => {
         `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${process.env.TMDB_API_KEY}`
     )
     const data = await movies.json()
-    console.log(data.results)
+    return res.json(data)
 })
 
 moviesRouter.get("/advancedsearch", async (req, res) => {
