@@ -16,6 +16,12 @@ const errorHandler = (error, req, res, next) => {
     if (error.name === "MovieRateLimitError") {
         return res.status(503).json({ error: "Server too busy"})
     }
+    if (error.name === "InvalidMovieOrUserIdError") {
+        return res.status(400).json({ error: "Invalid Logged Movie or User ID"})
+    }
+    if (error.name === "ValidationError") {
+        return res.status(400).json({ error: error.message })
+    }
 
     return res.status(500).json({ error: 'internal server error' })
 }
