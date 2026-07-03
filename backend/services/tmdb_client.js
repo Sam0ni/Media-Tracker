@@ -18,18 +18,32 @@ const throwTmdbError = (res) => {
     }
 }
 
+const requestTmdbApi = async (url) => {
+    const res = await fetch(url)
+
+    if (!res.ok) {
+        throwTmdbError(res)
+    }
+
+    return await res.json()
+}
+
 
 class TmdbClient {
     async getMovie(id) {
-        const res = await fetch(
+        const movie = await requestTmdbApi(
             `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_API_KEY}`
         )
 
-        if (!res.ok) {
-            throwTmdbError(res)
-        }
+        return movie
+    }
 
-        return await res.json()
+    async searchMovies(query) {
+        const movies = await requestTmdbApi(
+            `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${process.env.TMDB_API_KEY}`
+        )
+
+        return movies
     }
 }
 

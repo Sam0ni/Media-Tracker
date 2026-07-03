@@ -4,6 +4,7 @@ const User = require("../models/user")
 const decodeToken = require("../services/token_service")
 const userExtractor = require("../middleware/user_extractor")
 const TmdbClient = require("../services/tmdb_client")
+const MovieService = require("../services/movie_service")
 
 moviesRouter.get("/:id", async (req, res) => {
     const id = req.params.id
@@ -13,11 +14,8 @@ moviesRouter.get("/:id", async (req, res) => {
 
 moviesRouter.get("/search/:query", async (req, res) => {
     const query = req.params.query
-    const movies = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${process.env.TMDB_API_KEY}`
-    )
-    const data = await movies.json()
-    return res.json(data)
+    const movies = await TmdbClient.searchMovies(query)
+    return res.json(movies)
 })
 
 moviesRouter.get("/advancedsearch", async (req, res) => {
@@ -32,18 +30,7 @@ moviesRouter.post("/log", userExtractor, async (req, res) => {
     const body = req.body
     const user = req.user
 
-    const loggedMovie = new MovieLog({
-        userId: user._id,
-        movieId: body.movieId,
-
-        watched: body.watched,
-        watchedAt: body.watchedAt,
-        rating: body.rating,
-        review: body.review,
-        owned: body.owned,
-    })
-
-    const savedLog = await loggedMovie.save()
+    const savedLog = await MovieService.add_movie_log(body, user)
 
     res.status(201).json(savedLog)
 })
@@ -53,19 +40,7 @@ moviesRouter.put("/log/:id", userExtractor, async (req, res) => {
     const body = req.body
     const user = req.user
 
-    const loggedMovie = await MovieLog.findOne({_id: id, userId: user.id})
-
-    if (!loggedMovie) {
-        return res.status(400).json({ error: "Invalid Logged Movie or User ID" })
-    }
-
-    loggedMovie.watched = body.watched ? body.watched : loggedMovie.watched
-    loggedMovie.watchedAt = body.watchedAt ? body.watchedAt : loggedMovie.watchedAt
-    loggedMovie.rating = body.rating ? body.rating : loggedMovie.rating
-    loggedMovie.review = body.review ? body.review : loggedMovie.review
-    loggedMovie.owned = body.owned ? body.owned : loggedMovie.owned
-
-    const savedLog = await loggedMovie.save()
+    const savedLog = await MovieService.edit_movie_log(id, body, user)
 
     res.status(201).json(savedLog)
 

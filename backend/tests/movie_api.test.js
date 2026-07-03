@@ -1,4 +1,4 @@
-const { test, after, beforeEach, describe} = require('node:test')
+const { test, after, beforeEach, beforeAll, describe} = require('node:test')
 const assert = require('node:assert')
 const helper = require("./movie_test_helper")
 const mongoose = require('mongoose')
@@ -6,6 +6,7 @@ const nock = require("nock")
 const supertest = require('supertest')
 const app = require('../app')
 const MovieLog = require("../models/movie_log")
+const User = require("../models/user")
 
 const api = supertest(app)
 
@@ -60,6 +61,15 @@ describe("movie search endpoint", () => {
 })
 
 describe("movie logging", () => {
+    let token
+
+    beforeAll(async () => {
+        await User.deleteMany({});
+        await api.post("/api/users").send({username: "test", password: "test"})
+        const login = await api.post("/api/login").send({username: "test", password: "test"})
+        token = login.body.token
+    })
+
     beforeEach(async () => {
         await MovieLog.deleteMany({})
         await MovieLog.insertMany(helper.initialLogs)
@@ -73,6 +83,18 @@ describe("movie logging", () => {
         const logs = await helper.getMovieLogs()
 
         assert.equal(logs.length, 2)
+    })
+
+    test("movie log is added when user has a valid token", async () => {
+        await api
+            .post("/api/movies/log")
+            .send({movieId: 106, watched: true})
+            .set("Authorization", `Bearer ${token}`)
+            .expect(201)
+
+        const logs = await helper.getMovieLogs()
+
+        assert.equal(logs.length, 3)
     })
 })
 
