@@ -20,7 +20,7 @@ class MovieService{
             watchedAt: body.watchedAt,
             rating: body.rating,
             review: body.review,
-            owned: body.owned,
+            ownedFormats: body.ownedFormats,
         })
 
         const savedLog = await loggedMovie.save()
@@ -49,8 +49,8 @@ class MovieService{
             throw new ValidationError("Rating must be between 0 and 10")
         }
 
-        if (body.owned) {
-            body.owned = [...new Set(body.owned)];
+        if (body.ownedFormats) {
+            body.ownedFormats = [...new Set(body.ownedFormats)];
         }
 
 
@@ -58,7 +58,7 @@ class MovieService{
         loggedMovie.watchedAt = body.watchedAt === undefined ? loggedMovie.watchedAt : body.watchedAt
         loggedMovie.rating = body.rating === undefined ? loggedMovie.rating : body.rating
         loggedMovie.review = body.review === undefined ? loggedMovie.review : body.review
-        loggedMovie.ownedFormats = body.owned === undefined ? loggedMovie.ownedFormats : body.owned
+        loggedMovie.ownedFormats = body.ownedFormats === undefined ? loggedMovie.ownedFormats : body.ownedFormats
 
         const savedLog = await loggedMovie.save()
 

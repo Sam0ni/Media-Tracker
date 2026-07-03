@@ -1,4 +1,4 @@
-const { test, after, beforeEach, beforeAll, describe} = require('node:test')
+const { test, after, beforeEach, before, describe} = require('node:test')
 const assert = require('node:assert')
 const helper = require("./movie_test_helper")
 const mongoose = require('mongoose')
@@ -63,7 +63,7 @@ describe("movie search endpoint", () => {
 describe("movie logging", () => {
     let token
 
-    beforeAll(async () => {
+    before(async () => {
         await User.deleteMany({});
         await api.post("/api/users").send({username: "test", password: "test"})
         const login = await api.post("/api/login").send({username: "test", password: "test"})
@@ -78,6 +78,7 @@ describe("movie logging", () => {
     test("movie logging does not work for logged out user", async () => {
         await api
             .post("/api/movies/log")
+            .send({movieId: 106, watched: true})
             .expect(401)
 
         const logs = await helper.getMovieLogs()
@@ -95,6 +96,110 @@ describe("movie logging", () => {
         const logs = await helper.getMovieLogs()
 
         assert.equal(logs.length, 3)
+    })
+
+    test("movie is logged correctly", async () => {
+        const newLog = {movieId: 106, watched: true, watchedAt: '2026-07-03', rating: 5, review: "Arnold's best", ownedFormats: ["physical", "digital"]}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(201)
+
+        const logs = await helper.getMovieLogs()
+        const log = logs[2]
+
+        const actual = {
+            movieId: log.movieId,
+            watched: log.watched,
+            watchedAt: log.watchedAt.toISOString().slice(0, 10),
+            rating: log.rating,
+            review: log.review,
+            ownedFormats: log.ownedFormats,
+        }
+
+        assert.deepStrictEqual(actual, newLog)
+    })
+
+    test("movie is not logged if rating is invalid", async () => {
+        const newLog = {movieId: 106, watched: true, watchedAt: '2026-07-03', rating: 11, review: "Arnold's best", ownedFormats: ["physical", "digital"]}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(400)
+
+        const logs = await helper.getMovieLogs()
+
+        assert.equal(logs.length, 2)
+    })
+
+    test("movie is set watched if rating is provided", async () => {
+        const newLog = {movieId: 106, rating: 10}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(201)
+
+        const logs = await helper.getMovieLogs()
+
+        const log = logs[2]
+
+        const actual = {
+            movieId: log.movieId,
+            watched: log.watched,
+            rating: log.rating,
+        }
+
+        assert.deepStrictEqual(actual, {...newLog, watched: true})
+    })
+
+    test("movie is set watched if review is provided", async () => {
+        const newLog = {movieId: 106, review: "good movie"}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(201)
+
+        const logs = await helper.getMovieLogs()
+
+        const log = logs[2]
+
+        const actual = {
+            movieId: log.movieId,
+            watched: log.watched,
+            review: log.review,
+        }
+
+        assert.deepStrictEqual(actual, {...newLog, watched: true})
+    })
+
+    test("movie is set watched if watchedAt is provided", async () => {
+        const newLog = {movieId: 106, watchedAt: '2026-07-03'}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(201)
+
+        const logs = await helper.getMovieLogs()
+
+        const log = logs[2]
+
+        const actual = {
+            movieId: log.movieId,
+            watched: log.watched,
+            watchedAt: log.watchedAt.toISOString().slice(0, 10),
+        }
+
+        assert.deepStrictEqual(actual, {...newLog, watched: true})
     })
 })
 
