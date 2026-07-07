@@ -298,6 +298,60 @@ describe("movie log editing", () => {
         assert.equal(allLogs[0].rating, 7)
         assert.equal(allLogs[0].review, "test")
     })
+
+    test("review, rating and watched at are reset if watched is edited to false", async () => {
+        const edits = {watched: false}
+
+        await api
+            .put(`/api/movies/log/${id}`)
+            .send(edits)
+            .set("Authorization", `Bearer ${token}`)
+
+        const allLogs = await helper.getMovieLogs()
+
+        assert.equal(allLogs[0].rating, null)
+        assert.equal(allLogs[0].review, null)
+        assert.equal(allLogs[0].watchedAt, null)
+    })
+
+    test("if rating, review or watched at is being set, watched will be set to true", async () => {
+        const newLog = {movieId: 108, ownedFormats: ["physical", "digital"]}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+
+        const log = await api
+            .get("/api/movies/log/106")
+            .set("Authorization", `Bearer ${token}`)
+        const newId = log.body.id
+
+        const edits = {rating: 5}
+
+        await api
+            .put(`/api/movies/log/${newId}`)
+            .send(edits)
+            .set("Authorization", `Bearer ${token}`)
+
+        const allLogs = await helper.getMovieLogs()
+
+        assert.equal(allLogs[0].rating, 5)
+        assert.equal(allLogs[0].watched, true)
+    })
+
+    test("duplicate formats will be removed upon editing", async () => {
+        const edits = {ownedFormats: ["physical", "physical", "digital"]}
+
+        await api
+            .put(`/api/movies/log/${id}`)
+            .send(edits)
+            .set("Authorization", `Bearer ${token}`)
+
+        const allLogs = await helper.getMovieLogs()
+
+        assert.deepEqual(allLogs[0].ownedFormats, ["physical", "digital"])
+    })
 })
 
 after(async () => {
