@@ -33,10 +33,18 @@ class InvalidMovieOrUserIdError extends Error {
     }
 }
 
+class MovieAlreadyLoggedError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = "MovieAlreadyLoggedError"
+    }
+}
+
 module.exports = {
     MovieNotFoundError,
     MovieServiceAuthError,
     MovieRateLimitError,
     MovieServiceError,
     InvalidMovieOrUserIdError,
+    MovieAlreadyLoggedError,
 }

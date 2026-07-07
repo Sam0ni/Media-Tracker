@@ -26,11 +26,20 @@ moviesRouter.get("/advancedsearch", async (req, res) => {
     )*/
 })
 
+moviesRouter.get("/log/:id", userExtractor, async (req, res) => {
+    const id = req.params.id
+    const user = req.user
+
+    const log = await MovieService.getMovieLog(id, user)
+
+    res.status(200).json(log)
+})
+
 moviesRouter.post("/log", userExtractor, async (req, res) => {
     const body = req.body
     const user = req.user
 
-    const savedLog = await MovieService.add_movie_log(body, user)
+    const savedLog = await MovieService.addMovieLog(body, user)
 
     res.status(201).json(savedLog)
 })
@@ -40,7 +49,7 @@ moviesRouter.put("/log/:id", userExtractor, async (req, res) => {
     const body = req.body
     const user = req.user
 
-    const savedLog = await MovieService.edit_movie_log(id, body, user)
+    const savedLog = await MovieService.editMovieLog(id, body, user)
 
     res.status(201).json(savedLog)
 

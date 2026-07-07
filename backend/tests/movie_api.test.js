@@ -201,6 +201,103 @@ describe("movie logging", () => {
 
         assert.deepStrictEqual(actual, {...newLog, watched: true})
     })
+
+    test("same movie can only be logged once by the user", async () => {
+        const newLog = {movieId: 106, watchedAt: '2026-07-03'}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(201)
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(400)
+    })
+
+    test("movie log can be get by the user it was created by", async () => {
+        const newLog = {movieId: 106, watchedAt: '2026-07-03'}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+        
+        await api
+            .get("/api/movies/log/106")
+            .set("Authorization", `Bearer ${token}`)
+            .expect(200)
+    })
+
+    test("movie log is returned as a json with correct fields", async () => {
+        const newLog = {movieId: 106, watched: true, watchedAt: '2026-07-03', rating: 5, review: "Arnold's best", ownedFormats: ["physical", "digital"]}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+        
+        const log = await api
+            .get("/api/movies/log/106")
+            .set("Authorization", `Bearer ${token}`)
+            .expect(200)
+            .expect("Content-Type", /application\/json/)
+
+        const actual = {
+            movieId: log.body.movieId,
+            watched: log.body.watched,
+            watchedAt: log.body.watchedAt.slice(0, 10),
+            rating: log.body.rating,
+            review: log.body.review,
+            ownedFormats: log.body.ownedFormats,
+        }
+
+        assert.deepStrictEqual(actual, newLog)
+    })
+})
+
+describe("movie log editing", () => {
+    let token
+    let id
+
+    before(async () => {
+        await User.deleteMany({});
+        await api.post("/api/users").send({username: "test", password: "test"})
+        const login = await api.post("/api/login").send({username: "test", password: "test"})
+        token = login.body.token
+    })
+
+    beforeEach(async () => {
+        await MovieLog.deleteMany({})
+        const newLog = {movieId: 106, watched: true, watchedAt: '2026-07-03', rating: 5, review: "Arnold's best", ownedFormats: ["physical", "digital"]}
+
+        await api
+            .post("/api/movies/log")
+            .send(newLog)
+            .set("Authorization", `Bearer ${token}`)
+
+        const log = await api
+            .get("/api/movies/log/106")
+            .set("Authorization", `Bearer ${token}`)
+        id = log.body.id
+    })
+
+    test("logged movie can be edited", async () => {
+        const edits = {rating: 7, review: "test"}
+
+        await api
+            .put(`/api/movies/log/${id}`)
+            .send(edits)
+            .set("Authorization", `Bearer ${token}`)
+
+        const allLogs = await helper.getMovieLogs()
+
+        assert.equal(allLogs[0].rating, 7)
+        assert.equal(allLogs[0].review, "test")
+    })
 })
 
 after(async () => {

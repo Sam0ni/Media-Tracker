@@ -22,6 +22,9 @@ const errorHandler = (error, req, res, next) => {
     if (error.name === "ValidationError") {
         return res.status(400).json({ error: error.message })
     }
+    if (error.name === "MovieAlreadyLoggedError") {
+        return res.status(400).json({ error: "Movie has already been logged by current user"})
+    }
 
     return res.status(500).json({ error: 'internal server error' })
 }

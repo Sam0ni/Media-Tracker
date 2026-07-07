@@ -1,9 +1,25 @@
-const { InvalidMovieOrUserIdError } = require("../errors/movie_errors")
+const { InvalidMovieOrUserIdError, MovieAlreadyLoggedError } = require("../errors/movie_errors")
 const { ValidationError } = require("../errors/common_errors")
 const MovieLog = require("../models/movie_log")
 
 class MovieService{
-    async add_movie_log(body, user) {
+    async getMovieLog(id, user) {
+        const log = await MovieLog.findOne({movieId: id, userId: user.id})
+
+        if (!log) {
+            throw new InvalidMovieOrUserIdError("Invalid Logged Movie or User ID")
+        }
+
+        return log
+    }
+
+    async addMovieLog(body, user) {
+        const movieLog = await MovieLog.findOne({movieId: body.movieId, userId: user.id})
+
+        if (movieLog) {
+            throw new MovieAlreadyLoggedError("Movie has already been logged by current user")
+        }
+
         if (body.rating !== null || body.watchedAt !== null || body.review !== null) {
             body.watched = true
         }
@@ -28,7 +44,7 @@ class MovieService{
         return savedLog
     } 
 
-    async edit_movie_log(id, body, user) {
+    async editMovieLog(id, body, user) {
         const loggedMovie = await MovieLog.findOne({_id: id, userId: user.id})
         
         if (!loggedMovie) {
