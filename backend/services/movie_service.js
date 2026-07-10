@@ -2,6 +2,28 @@ const { InvalidMovieOrUserIdError, MovieAlreadyLoggedError } = require("../error
 const { ValidationError } = require("../errors/common_errors")
 const MovieLog = require("../models/movie_log")
 
+const loggingValidation = (body) => {
+    if (body.watched === false) {
+        body.rating = null
+        body.watchedAt = null
+        body.review = null
+    }
+
+    if (body.rating !== null || body.watchedAt !== null || body.review !== null) {
+        body.watched = true
+    }
+
+    if (body.rating > 10 || body.rating < 0) {
+        throw new ValidationError("Rating must be between 0 and 10")
+    }
+
+    if (body.ownedFormats) {
+        body.ownedFormats = [...new Set(body.ownedFormats)];
+    }
+
+    return body
+}
+
 class MovieService{
     async getMovieLog(id, user) {
         const log = await MovieLog.findOne({movieId: id, userId: user.id})
@@ -20,13 +42,7 @@ class MovieService{
             throw new MovieAlreadyLoggedError("Movie has already been logged by current user")
         }
 
-        if (body.rating !== null || body.watchedAt !== null || body.review !== null) {
-            body.watched = true
-        }
-
-        if (body.rating > 10 || body.rating < 0) {
-            throw new ValidationError("Rating must be between 0 and 10")
-        }
+        body = loggingValidation(body)
 
         const loggedMovie = new MovieLog({
             userId: user._id,
@@ -51,23 +67,7 @@ class MovieService{
             throw new InvalidMovieOrUserIdError("Invalid Logged Movie or User ID")
         }
 
-        if (body.watched === false) {
-            body.rating = null
-            body.watchedAt = null
-            body.review = null
-        }
-
-        if (body.rating !== null || body.watchedAt !== null || body.review !== null) {
-            body.watched = true
-        }
-
-        if (body.rating > 10 || body.rating < 0) {
-            throw new ValidationError("Rating must be between 0 and 10")
-        }
-
-        if (body.ownedFormats) {
-            body.ownedFormats = [...new Set(body.ownedFormats)];
-        }
+        body = loggingValidation(body)
 
 
         loggedMovie.watched = body.watched === undefined ? loggedMovie.watched : body.watched

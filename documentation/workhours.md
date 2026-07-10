@@ -13,4 +13,8 @@
 | 18.6 | 1     | Creating error handling middleware |
 | 21.6 | 4     | Refactoring movie fetching from api and creating custom errors. Also creating first test and getting familiar with api mocking via nock | 
 | 22.6 | 2     | Refactoring and testing some movierouter endpoints |
-| Total | 27 | Total | 
+| 2.7  | 2     | Starting refactoring movierouter endpoints to movie service |
+| 3.7  | 4     | Continuing refactoring and doing tests for movierouter and user administration |
+| 7.7  | 2     | More refactoring and testing movie log editing |
+| 8.7  | 4     | Seaching for suitable UI framework, and getting familiar with tailwindcss, shadcn/ui and lucide |
+| Total | 39 | Total | 
