@@ -17,4 +17,5 @@
 | 3.7  | 4     | Continuing refactoring and doing tests for movierouter and user administration |
 | 7.7  | 2     | More refactoring and testing movie log editing |
 | 8.7  | 4     | Seaching for suitable UI framework, and getting familiar with tailwindcss, shadcn/ui and lucide |
-| Total | 39 | Total | 
+| 13.7 | 4     | Start making frontend. Create header/navigation bar component(s) and style them |
+| Total | 43 | Total | 
