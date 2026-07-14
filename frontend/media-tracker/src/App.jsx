@@ -6,6 +6,7 @@ import {
 import LoginForm from "./components/LoginForm"
 import Home from "./components/Home"
 import Header from './components/Header'
+import MovieDetails from './components/MovieDetails'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/movies/:id" element={<MovieDetails />}/>
       </Routes>
     </Router>
   )

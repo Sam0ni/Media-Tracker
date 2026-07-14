@@ -1,11 +1,14 @@
 const config = require("./utils/config")
 const express = require("express")
 const app = express()
+const cors = require("cors")
 const usersRouter = require("./controllers/users")
 const loginRouter = require("./controllers/login")
 const movieRouter = require("./controllers/movies")
 const connect_to_db = require("./utils/database_connection")
 const errorHandler = require("./middleware/error_handler")
+
+app.use(cors())
 
 app.use(express.json())
 

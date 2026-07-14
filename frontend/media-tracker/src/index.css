@@ -48,6 +48,7 @@
     --radius-4xl: calc(var(--radius) * 2.6);
     --color-header-light: #2F6596;
     --color-header: #224769;
+    --color-main-background: #2b2f36;
 }
 
 :root {
@@ -129,4 +130,9 @@
   html {
     @apply font-sans;
     }
+}
+
+body {
+    background-color: #2b2f36;
+    color: white;
 }
